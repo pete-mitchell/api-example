@@ -1,0 +1,36 @@
+version: '3'
+
+services:
+  database:
+    build:
+      context: ./database
+    environment:
+      - POSTGRES_USER=${DATABASE_USER}
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+      - POSTGRES_DB=${DATABASE_NAME}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./database/data:/var/lib/postgresql/data
+
+  php-fpm:
+    build:
+      context: ./php-fpm
+    depends_on:
+      - database
+    environment:
+      - APP_ENV=${APP_ENV}
+      - APP_SECRET=${APP_SECRET}
+      - DATABASE_URL=pgsql://${DATABASE_USER}:${DATABASE_PASSWORD}@database:5432/${DATABASE_NAME}?serverVersion=12
+    volumes:
+      - ../:/var/www
+
+  nginx:
+    build:
+      context: ./nginx
+    volumes:
+      - ../:/var/www
+    depends_on:
+      - php-fpm
+    ports:
+      - "8080:80"

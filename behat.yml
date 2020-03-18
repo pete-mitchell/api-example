@@ -1,0 +1,14 @@
+default:
+  suites:
+    default:
+      contexts:
+        - ScenarioSetupContext:
+            connection: '@database_connection'
+        - FeatureContext:
+            browser: '@symfony_kernel_browser'
+
+  extensions:
+    Behat\Symfony2Extension:
+      kernel:
+        bootstrap: features/bootstrap/bootstrap.php
+        class: App\Kernel

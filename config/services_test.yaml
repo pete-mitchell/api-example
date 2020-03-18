@@ -1,0 +1,11 @@
+parameters:
+  env(ENVIRONMENT_NAME): test
+
+services:
+  _defaults:
+    autowire: true
+    autoconfigure: true
+    public: true
+
+  symfony_kernel_browser:
+    class: Symfony\Bundle\FrameworkBundle\KernelBrowser
