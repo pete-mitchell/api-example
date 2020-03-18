@@ -37,15 +37,9 @@ class FeatureContext implements Context
      */
     public function shouldHaveInTheirTodoList($todo)
     {
-        $response = $this->request('GET', '/todos');
+        $data = $this->request('GET', '/todos');
 
-        $data = json_decode($response->getContent(), true);
-
-        if (!isset($data['data'])) {
-            throw new Exception('Invalid JSON:API response from endpoint');
-        }
-
-        foreach ($data['data'] as $row) {
+        foreach ($data as $row) {
             if ($row['attributes']['title'] === $todo) {
                 return;
             }
@@ -54,7 +48,7 @@ class FeatureContext implements Context
         throw new Exception('Todo not found');
     }
 
-    private function request(string $method, string $uri, ?array $body = null): Response
+    private function request(string $method, string $uri, ?array $body = null): array
     {
         $headers = [
             'CONTENT_TYPE' => self::API_MEDIA_TYPE,
@@ -74,6 +68,12 @@ class FeatureContext implements Context
             throw new Exception("HTTP Error {$status}: {$response->getContent()}");
         }
 
-        return $response;
+        $content = json_decode($response->getContent(), true);
+
+        if (!isset($content['data'])) {
+            throw new Exception('Invalid JSON:API response from endpoint');
+        }
+
+        return $content['data'];
     }
 }
