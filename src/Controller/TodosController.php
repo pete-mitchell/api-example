@@ -9,6 +9,9 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
+/**
+ * @Route("/todos")
+ */
 class TodosController
 {
     private $repository;
@@ -19,7 +22,7 @@ class TodosController
     }
 
     /**
-     * @Route("/todos", methods={"POST"}))
+     * @Route(methods={"POST"}))
      */
     public function create(JsonApiRequest $request): Todo
     {
@@ -31,7 +34,7 @@ class TodosController
     }
 
     /**
-     * @Route("/todos", methods={"GET"}))
+     * @Route(methods={"GET"}))
      */
     public function index(): array
     {
