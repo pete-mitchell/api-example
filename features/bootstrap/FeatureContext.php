@@ -18,6 +18,7 @@ class FeatureContext implements Context
 
     /**
      * @When I add :todo to my todo list
+     * @Given I have added :todo to my todo list
      */
     public function iAddToMyTodoList($todo)
     {
@@ -46,6 +47,44 @@ class FeatureContext implements Context
         }
 
         throw new Exception('Todo not found');
+    }
+
+    /**
+     * @When I complete :todo
+     */
+    public function iComplete($todo)
+    {
+        $data = $this->request('GET', '/todos');
+
+        $id = null;
+        foreach ($data as $row) {
+            if ($row['attributes']['title'] === $todo) {
+                $id = $row['id'];
+                break;
+            }
+        }
+
+        if (!$id) {
+            throw new Exception('Todo not found');
+        }
+
+        $this->request('POST', "/todos/{$id}/actions/complete");
+    }
+
+    /**
+     * @Then :todo should be completed
+     */
+    public function shouldBeCompleted($todo)
+    {
+        $data = $this->request('GET', '/todos');
+
+        foreach ($data as $row) {
+            if ($row['attributes']['title'] === $todo && $row['attributes']['isCompleted'] === true) {
+                return;
+            }
+        }
+
+        throw new Exception('Todo not found or was not completed');
     }
 
     private function request(string $method, string $uri, ?array $body = null): array

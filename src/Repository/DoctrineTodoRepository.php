@@ -29,4 +29,9 @@ class DoctrineTodoRepository implements TodoRepository
     {
         return $this->repository->findAll();
     }
+
+    public function find(string $id): ?Todo
+    {
+        return $this->repository->find($id);
+    }
 }

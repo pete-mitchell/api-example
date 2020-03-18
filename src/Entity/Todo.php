@@ -21,10 +21,16 @@ class Todo implements JsonApiSerializable
      */
     private string $title;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private bool $isCompleted;
+
     public function __construct(string $id, string $title)
     {
         $this->id = $id;
         $this->title = $title;
+        $this->isCompleted = false;
     }
 
     public function getId(): string
@@ -37,6 +43,16 @@ class Todo implements JsonApiSerializable
         return $this->title;
     }
 
+    public function complete(): void
+    {
+        $this->isCompleted = true;
+    }
+
+    public function isCompleted(): bool
+    {
+        return $this->isCompleted;
+    }
+
     public function toJsonApi(): array
     {
         return [
@@ -44,6 +60,7 @@ class Todo implements JsonApiSerializable
             'type' => 'todo',
             'attributes' => [
                 'title' => $this->getTitle(),
+                'isCompleted' => $this->isCompleted,
             ],
         ];
     }

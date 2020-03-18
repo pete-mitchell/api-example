@@ -38,4 +38,16 @@ class TodosControllerSpec extends ObjectBehavior
 
         $this->index()->shouldReturn([$todo]);
     }
+
+    function it_completes_a_todo(Todo $todo, TodoRepository $repository)
+    {
+        $id = Uuid::uuid_create(Uuid::UUID_TYPE_RANDOM);
+
+        $repository->find($id)->willReturn($todo);
+        $repository->save($todo)->shouldBeCalled();
+
+        $todo->complete()->shouldBeCalled();
+
+        $this->complete($id)->shouldReturn($todo);
+    }
 }

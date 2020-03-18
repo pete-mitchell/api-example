@@ -40,4 +40,22 @@ class TodosController
     {
         return $this->repository->findAll();
     }
+
+    /**
+     * @Route("/{id}/actions/complete", methods={"POST"}))
+     */
+    public function complete(string $id): Todo
+    {
+        $todo = $this->repository->find($id);
+
+        if (!$todo) {
+            throw new NotFoundHttpException();
+        }
+
+        $todo->complete();
+
+        $this->repository->save($todo);
+
+        return $todo;
+    }
 }
